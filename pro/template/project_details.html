@@ -1,0 +1,296 @@
+{% extends 'base.html' %}
+{% block base_header %}
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                aria-expanded="false" aria-controls="navbar">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">项目全生命周期管理</a>
+      </div>
+      <div id="navbar" class="navbar-collapse collapse">
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="#">部门</a></li>
+          <li><a href="#">我的</a></li>
+          <li><a href="#">admin</a></li>
+          <li><a href="#">Help</a></li>
+        </ul>
+        <form class="navbar-form navbar-right">
+          <input type="text" class="form-control" placeholder="Search...">
+          <button type="button" class="btn btn-info ">搜索</button>
+        </form>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-3 col-md-2 sidebar">
+        <ul class="nav nav-sidebar">
+          <li class="active"><a href="#">文档列表 <span class="sr-only">(current)</span></a></li>
+          <li><a href="#">Reports</a></li>
+          <li><a href="#">Analytics</a></li>
+          <li><a href="#">Export</a></li>
+        </ul>
+        <ul class="nav nav-sidebar">
+          <li><a href="">Nav item</a></li>
+          <li><a href="">Nav item again</a></li>
+          <li><a href="">One more nav</a></li>
+          <li><a href="">Another nav item</a></li>
+          <li><a href="">More navigation</a></li>
+        </ul>
+        <ul class="nav nav-sidebar">
+          <li><a href="">Nav item again</a></li>
+          <li><a href="">One more nav</a></li>
+          <li><a href="">Another nav item</a></li>
+        </ul>
+      </div>
+      <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <h1 class="page-header">全生命周期管理</h1>
+        <h4>项目基本信息</h4>
+        <div class="row placeholders">
+          <div class="col-xs-4 col-md-4 placeholder">
+            <table class="table">
+              <tr>
+                <td>项目编号:{{ id }}</td>
+              </tr>
+              <tr>
+                <td>项目类型:{{ style }}</td>
+              </tr>
+              <tr>
+                <td>创建时间:{{ create_time }}</td>
+              </tr>
+            </table>
+          </div>
+          <div class="col-xs-4 col-md-4 placeholder">
+            <table class="table">
+              <tr>
+                <td>负责人:{{ leader }}</td>
+              </tr>
+              <tr>
+                <td>更新时间：{{ update_time }}</td>
+              </tr>
+              <tr>
+                <td></td>
+              </tr>
+            </table>
+          </div>
+          <div class="col-xs-4 col-md-4 placeholder">
+            <table class="table">
+              <tr>
+                <td>状态:<p style='font: 28px/35px "microsoft yahei"; color: #f60; margin-bottom: 5px;'>{{ status }}</p>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+        <h4 class="sub-header">项目活跃</h4>
+        <div class="row placeholders">
+
+          <div class="col-xs-4 col-sm-3 placeholder">
+            <img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" width="200"
+                 height="200" class="img-responsive" alt="Generic placeholder thumbnail">
+            <h4>当前项目</h4>
+            <span class="text-muted">当前项目进度</span>
+          </div>
+          <div class="col-xs-4 col-sm-3 placeholder">
+            <img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" width="200"
+                 height="200" class="img-responsive" alt="Generic placeholder thumbnail">
+            <h4>项目活跃</h4>
+            <span class="text-muted">项目活跃人数</span>
+          </div>
+          <div class="col-xs-4 col-sm-3 placeholder">
+            <img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" width="200"
+                 height="200" class="img-responsive" alt="Generic placeholder thumbnail">
+            <h4>项目活跃</h4>
+            <span class="text-muted">项目活跃文档</span>
+          </div>
+          <div class="col-xs-12 col-sm-3 placeholder">
+            <table class="table table-bordered">
+              动态
+              <thead>
+              <th>姓名</th>
+              <th>日期</th>
+              <th>内容</th>
+              </thead>
+              <tbody>
+              <tr>
+                <td>test1</td>
+                <td>2021.02.11</td>
+                <td>上传了××××文件</td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <h2 class="sub-header">文档记录</h2>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="btn-group" role="group" aria-label="...">
+              <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalFileCreate">创建
+              </button>
+              <button type="button" class="btn btn-primary" data-toggle="modal" onclick="alertFileModalPut()">编辑
+              </button>
+              <button type="button" class="btn btn-danger" data-toggle="modal" onclick="deleteFileCheckProject()">删除
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+            <tr>
+              <th>操作</th>
+              <th>文档编号</th>
+              <th>文档名称</th>
+              <th>审批状态</th>
+              <th>创建时间</th>
+              <th>更新时间</th>
+              <th>创建人</th>
+              <th>审批人</th>
+              <th>项目阶段</th>
+            </tr>
+            </thead>
+            <tbody id="fileUploadTo">
+            {% for result_dict in result_dicts %}
+              <tr>
+                <td><label><input type="checkbox" value="{{ result_dict.pk }}"></label></td>
+                <td>{{ result_dict.id }}</td>
+                <td>{{ result_dict.name }}</td>
+                <td>{{ result_dict.trial_status }}</td>
+                <td>{{ result_dict.create_time }}</td>
+                <td>{{ result_dict.update_time }}</td>
+                <td>{{ result_dict.leader }}</td>
+                <td>{{ result_dict.leader }}</td>
+                <td></td>
+                <td>
+                  <button class="btn btn-primary btn-sm">去审批</button>
+                </td>
+              </tr>
+            {% endfor %}
+
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 模态框  创建 -->
+  <div class="modal fade" tabindex="-1" id='modalFileCreate' role="dialog" aria-labelledby="gridSystemModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+            aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="gridSystemModalLabel">文档创建</h4>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-3 col-md-offset-1">
+              <div style="margin-bottom: 20px;">
+                {# 1. 添加附件的按钮 #}
+                <button type="button" class="btn btn-primary js-upload-photos">
+                  <span class="glyphicon glyphicon-cloud-upload"></span> 上传附件
+                </button>
+                {# 2. 上传图片的插件 #}
+                <input id="fileupload" type="file" name="file" multiple
+                       style="display: none;"
+                       data-url="/ProjectDetail/"
+                       data-form-data='{"file_project": "{{ id }}.{{ user_id }}"}' >
+              </div>
+            </div>
+{#            <div class="col-md-2"><small>文档名称</small></div>#}
+{#            <div class="col-md-3  "><input type="text" id="modalCreateFileProjectStyle"#}
+{#                                           class="form-control input-sm"></div>#}
+{#            <div class="col-md-2"><small>项目阶段</small></div>#}
+          </div>
+
+
+          <div class="row">
+            <div class="col-md-12">
+
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="well text-muted text-center" style="padding-top: 4rem; padding-bottom: 4rem;">
+                <span class="glyphicon glyphicon-arrow-down" style="font-size: 4rem;"></span>
+                <h3>拖入文件上传</h3>
+              </div>
+              <div class="modal fade" id="modal-progress" data-backdrop="static" data-keyboard="false">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header"><h4 class="modal-title">Uploading...</h4></div>
+                    <div class="modal-body">
+                      <div class="progress">
+                        <div class="progress-bar" role="progressbar" style="width: 0%;">0%</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-6 col-md-offset-6">
+              <p class="bg-danger" id="modalFileErrorMsg"></p>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+          <button type="button" id="BtnAddCloseModal" class="btn btn-primary"
+                  onclick="modalCreateFile()">创建
+          </button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+  </div>
+  <!--模态框 修改-->
+  <div class="modal fade" tabindex="-2" id="modalPut" role="dialog" aria-labelledby="gridSystemModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+            aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="gridSystemModalLabel">编辑信息 项目编号：
+            <samll id="modalProjectId"></samll>
+          </h4>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-3 col-md-offset-1"><input type="file" id="modalPutProjectName"
+                                                         class="form-control input-sm"></div>
+            <div class="col-md-2"><small>项目名称</small></div>
+            <div class="col-md-3 "><input type="text" id="modalPutProjectStyle"
+                                          class="form-control input-sm"></div>
+            <div class="col-md-2"><small>项目类型</small></div>
+          </div>
+          <div class="row">
+            <div class="col-md-3 col-md-offset-1"><input type="text" id="modalPutProjectStatus"
+                                                         class="form-control input-sm"></div>
+            <div class="col-md-2"><small>项目状态</small></div>
+            <div class="col-md-3 "><input type="text" id="modalPutProjectLeader" class="form-control input-sm"></div>
+            <div class="col-md-2"><small>负责人</small></div>
+          </div>
+          <div class="row">
+            <div class="col-md-3 col-md-offset-3"><p id="response_update_info" class="text-danger">{{ msg }}</p></div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+          <button type="button" class="btn btn-primary" onclick="BtnModalPut()">保存</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+{% endblock base_header %}

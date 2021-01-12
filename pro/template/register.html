@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <link rel="icon" href="{% static 'favicon.ico' %}">
+  <link rel="stylesheet" href="{% static "css/bootstrap.css" %}">
+  <script src="{% static "js/jquery.min.js/" %}"></script>
+  <script src="{% static "js/bootstrap.js/" %}"></script>
+  <script src="{% static "js/register.js/" %}"></script>
+  <style>
+    .form-control {
+      margin-top: 1%;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="row">
+    <div class="col-md-2"></div>
+    <div class="col-md-8">
+      <form class="form-signin" action="/register/" method="POST">
+        <h2 class="form-signin-heading">请注册</h2>
+        <label for="username" class="sr-only">用户名</label>
+        <input type="text" id="username" name="username" class="form-control" placeholder="用户名" required=""
+               autofocus="">
+        <label for="mobile" class="sr-only">手机号</label>
+        <input type="text" id="mobile" name="mobile" class="form-control" placeholder="手机号" required="" autofocus="">
+        <label for="email" class="sr-only">邮箱</label>
+        <input type="text" id="email" name="email" class="form-control" placeholder="邮箱" required="" autofocus="">
+        <label for="password" class="sr-only">密码</label>
+        <input type="password" id="password" name="password" class="form-control" placeholder="密码" required="">
+        <label for="password2" class="sr-only">确认密码</label>
+        <input type="password" id="password2" name="password2" class="form-control" placeholder="再输入一次密码哦" required="">
+        <button class="btn btn-lg btn-primary btn-block btn-sm" type="button" onclick="RegisterVerify()">点击注册</button>
+      </form>
+    </div>
+    <div class="col-md-2"></div>
+  </div>
+  <div class="row">
+    <div class="col-md-2"></div>
+    <div class="col-md-8"></div>
+    <div class="col-md-2"></div>
+  </div>
+  <div class="row">
+    <div class="col-md-2"></div>
+    <div class="col-md-8"><p class="text-danger" id="responseInfo"></p></div>
+    <div class="col-md-2"></div>
+  </div>
+</div>
+
+</body>
+</html>
