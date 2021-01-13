@@ -2,12 +2,43 @@ from django.shortcuts import render
 from django.views.generic import View
 from pro.utils.jwts import JWT_Verify
 from .models import *
-from django.http import JsonResponse
 from pro.utils.return_code import *
 from user.models import User
-import json
+import json, os
 from django.core.serializers import serialize
-from django.http import QueryDict
+from django.http import QueryDict, StreamingHttpResponse, JsonResponse
+from django.conf import settings
+
+'''
+文件下载
+'''
+
+
+def downlaod_file(request):
+    # 生成器 分片下载
+    def down_yeild(file_path, chunk_size=1024):
+        with open(file_path, 'rb') as f:
+            while True:
+                chunk_stream = f.read(chunk_size)
+                if chunk_stream:
+                    yield chunk_stream
+                else:
+                    break
+
+    next_url = request.path_info
+    file_path = settings.BASE_DIR + '/' + 'files' + next_url
+    file_name = next_url.split('/')[-1]
+    try:
+        # 设置响应头
+        # StreamingHttpResponse将文件内容进行流式传输，数据量大可以用这个方法
+        response = StreamingHttpResponse(down_yeild(file_path))
+        # 以流的形式下载文件,实现任意格式的文件下载
+        response['Content-Type'] = 'application/octet-stream'
+        # Content-Disposition就是当用户想把请求所得的内容存为一个文件的时候提供一个默认的文件名
+        response['Content-Disposition'] = 'attachment;filename="{}"'.format(file_name)
+    except Exception as e:
+        return JsonResponse(code_error(e))
+    return response
 
 
 class IndexView(View):
@@ -53,7 +84,6 @@ class IndexView(View):
                 return render(request, "index.html", context=payload)
 
 
-
 class ProjectView(View):
     # 项目视图创建查询修改删除
     def get(self, request):
@@ -69,7 +99,7 @@ class ProjectView(View):
         if leader:
             content['leader__username__contains'] = leader
         if status:
-            content['status__name'] = status
+            content['status__name__contains'] = status
         if style:
             content['style__contains'] = style
         if create_time:
@@ -123,7 +153,7 @@ class ProjectView(View):
                     user_id = result_dict['fields']['leader']
                     user = User.objects.filter(id=user_id)[0]
                     result_dicts[index]['fields']['leader'] = user.username
-                    result_dicts[index]['fields']['status'] = result_queryset[index].status
+                    result_dicts[index]['fields']['status'] = result_queryset[index].status.name
                 response_data = code_success()
                 response_data['data'] = result_dicts
                 return JsonResponse(response_data)
@@ -194,21 +224,12 @@ class ProjectDetailView(View):
             #  queryset序列化输出
             result_json = serialize('json', result_queryset)
             result_dicts = json.loads(result_json)
-            data = {}
             for index, result_dict in enumerate(result_dicts):
-                data['id'] = result_dict['pk']
-                data['name'] = result_dict['fields']['name']
-                data['trial_status'] = result_dict['fields']['trial_status']
-                data['create_time'] = result_dict['fields']['create_time']
-                data['update_time'] = result_dict['fields']['update_time']
-                data['username'] = result_queryset[index].founder.username
-                data['leader'] = result_dict['fields']['leader']
-                # data['project_status'] = result_dict['fields']['']
-                # user = User.objects.filter(id=user_id)[0]
-                # result_dicts[index]['fields']['leader'] = user.username
-                # result_dicts[index]['fields']['file_project'] =
+                result_dict['fields']['founder'] = result_queryset[index].founder.username
+                result_dict['fields']['file_project'] = result_queryset[index].file_project.status.name
             response_data['result_dicts'] = result_dicts
             response_data['user_id'] = user_login_id
+            print(response_data)
             return render(request, 'project_details.html', context=response_data)
 
     def post(self, request):
@@ -224,4 +245,9 @@ class ProjectDetailView(View):
                                        file_router=file,
                                        file_project=ProjectBaseInfo.objects.get(id=style_username[0]), is_delete=0)
             file_object.save()
-        return JsonResponse(code_success())
+            # 拼接返回的参数
+            data = code_success()
+            data['url'] = file_object.file_router.url
+            data['name'] = file_object.name.name
+            print(data)
+            return JsonResponse(data)

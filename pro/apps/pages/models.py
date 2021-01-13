@@ -46,7 +46,7 @@ class FileBaseInfo(model.BaseModel):
     leader = models.CharField(max_length=50, verbose_name='审批人', null=True, blank=True, help_text='审批人')
     file_router = models.FileField(verbose_name='文件存储路径', help_text="文件存储路径",
                                    upload_to="upload/%Y/%m/%d/")
-    file_project = models.ForeignKey(ProjectCategory, null=True, on_delete=models.CASCADE, verbose_name='文档隶属项目阶段',
+    file_project = models.ForeignKey(ProjectBaseInfo, null=True, on_delete=models.CASCADE, verbose_name='文档隶属项目阶段',
                                      help_text='项目阶段')
     is_delete = models.BooleanField(default=0, verbose_name='是否删除', help_text='是否删除')
 

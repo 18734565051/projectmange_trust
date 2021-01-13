@@ -155,23 +155,22 @@
               <th>创建人</th>
               <th>审批人</th>
               <th>项目阶段</th>
+              <th>下载</th>
             </tr>
             </thead>
             <tbody id="fileUploadTo">
             {% for result_dict in result_dicts %}
               <tr>
                 <td><label><input type="checkbox" value="{{ result_dict.pk }}"></label></td>
-                <td>{{ result_dict.id }}</td>
-                <td>{{ result_dict.name }}</td>
-                <td>{{ result_dict.trial_status }}</td>
-                <td>{{ result_dict.create_time }}</td>
-                <td>{{ result_dict.update_time }}</td>
-                <td>{{ result_dict.leader }}</td>
-                <td>{{ result_dict.leader }}</td>
-                <td></td>
-                <td>
-                  <button class="btn btn-primary btn-sm">去审批</button>
-                </td>
+                <td>{{ result_dict.pk }}</td>
+                <td>{{ result_dict.fields.name }}</td>
+                <td>{{ result_dict.fields.trial_status }}</td>
+                <td>{{ result_dict.fields.create_time }}</td>
+                <td>{{ result_dict.fields.update_time }}</td>
+                <td>{{ result_dict.fields.founder }}</td>
+                <td>{{ result_dict.fields.leader }}</td>
+                <td>{{ result_dict.fields.file_project }}</td>
+                <td><a href="/{{ result_dict.fields.file_router }}">{{ result_dict.fields.file_router }}</a></td>
               </tr>
             {% endfor %}
 
@@ -203,13 +202,13 @@
                 <input id="fileupload" type="file" name="file" multiple
                        style="display: none;"
                        data-url="/ProjectDetail/"
-                       data-form-data='{"file_project": "{{ id }}.{{ user_id }}"}' >
+                       data-form-data='{"file_project": "{{ id }}.{{ user_id }}"}'>
               </div>
             </div>
-{#            <div class="col-md-2"><small>文档名称</small></div>#}
-{#            <div class="col-md-3  "><input type="text" id="modalCreateFileProjectStyle"#}
-{#                                           class="form-control input-sm"></div>#}
-{#            <div class="col-md-2"><small>项目阶段</small></div>#}
+            {#            <div class="col-md-2"><small>文档名称</small></div>#}
+            {#            <div class="col-md-3  "><input type="text" id="modalCreateFileProjectStyle"#}
+            {#                                           class="form-control input-sm"></div>#}
+            {#            <div class="col-md-2"><small>项目阶段</small></div>#}
           </div>
 
 

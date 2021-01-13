@@ -188,14 +188,12 @@ $(function () {
     },
 
     done: function (e, data) {
-      console.log(data)
-      if (data.code == 100) {
+
         $('#modalFileCreate').modal("hide");
 
         $("#fileUploadTo").prepend(
           "<tr><td><a href='" + data.result.url + "'>" + data.result.name + "</a></td></tr>"
         )
-      }
     }
   });
 });
