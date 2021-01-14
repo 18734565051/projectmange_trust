@@ -68,3 +68,7 @@ def code_porject_name_exists():
 
 def code_files_upload_fail():
     return {"code": 401, "msg": "文件上传失败"}
+
+
+def code_files_update_fail():
+    return {"code": 402, "msg": "文件更新失败"}

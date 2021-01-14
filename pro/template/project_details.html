@@ -118,11 +118,13 @@
               <th>内容</th>
               </thead>
               <tbody>
-              <tr>
-                <td>test1</td>
-                <td>2021.02.11</td>
-                <td>上传了××××文件</td>
-              </tr>
+              {% for log in logs %}
+                <tr>
+                  <td>{{ log.username }}</td>
+                  <td>{{ log.time }}</td>
+                  <td>{{ log.content }}</td>
+                </tr>
+              {% endfor %}
               </tbody>
             </table>
           </div>
@@ -136,6 +138,8 @@
               <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalFileCreate">创建
               </button>
               <button type="button" class="btn btn-primary" data-toggle="modal" onclick="alertFileModalPut()">编辑
+              </button>
+              <button type="button" class="btn btn-primary" data-toggle="modal" onclick="alertFileModalPut()">审批
               </button>
               <button type="button" class="btn btn-danger" data-toggle="modal" onclick="deleteFileCheckProject()">删除
               </button>
@@ -205,10 +209,6 @@
                        data-form-data='{"file_project": "{{ id }}.{{ user_id }}"}'>
               </div>
             </div>
-            {#            <div class="col-md-2"><small>文档名称</small></div>#}
-            {#            <div class="col-md-3  "><input type="text" id="modalCreateFileProjectStyle"#}
-            {#                                           class="form-control input-sm"></div>#}
-            {#            <div class="col-md-2"><small>项目阶段</small></div>#}
           </div>
 
 
@@ -254,40 +254,35 @@
   </div><!-- /.modal -->
   </div>
   <!--模态框 修改-->
-  <div class="modal fade" tabindex="-2" id="modalPut" role="dialog" aria-labelledby="gridSystemModalLabel">
+  <div class="modal fade" tabindex="-2" id="modalFilePut" role="dialog" aria-labelledby="gridSystemModalLabel">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
             aria-hidden="true">&times;</span></button>
           <h4 class="modal-title" id="gridSystemModalLabel">编辑信息 项目编号：
-            <samll id="modalProjectId"></samll>
+            <samll id="modalPutFileId"></samll>
           </h4>
         </div>
         <div class="modal-body">
           <div class="row">
-            <div class="col-md-3 col-md-offset-1"><input type="file" id="modalPutProjectName"
+            <div class="col-md-3 col-md-offset-1"><input type="text" id="modalPutFileLeader"
                                                          class="form-control input-sm"></div>
-            <div class="col-md-2"><small>项目名称</small></div>
-            <div class="col-md-3 "><input type="text" id="modalPutProjectStyle"
-                                          class="form-control input-sm"></div>
-            <div class="col-md-2"><small>项目类型</small></div>
+            <div class="col-md-2"><small>创建人</small></div>
+            <div class="col-md-3 "><input type="text" id="modalPutFileProjectStatus"
+                                                         class="form-control input-sm"></div>
+            <div class="col-md-2"><small>项目阶段</small></div>
+
           </div>
           <div class="row">
-            <div class="col-md-3 col-md-offset-1"><input type="text" id="modalPutProjectStatus"
-                                                         class="form-control input-sm"></div>
-            <div class="col-md-2"><small>项目状态</small></div>
-            <div class="col-md-3 "><input type="text" id="modalPutProjectLeader" class="form-control input-sm"></div>
-            <div class="col-md-2"><small>负责人</small></div>
-          </div>
-          <div class="row">
-            <div class="col-md-3 col-md-offset-3"><p id="response_update_info" class="text-danger">{{ msg }}</p></div>
+            <div class="col-md-3 col-md-offset-3"><p id="response_File_update_info" class="text-danger">{{ msg }}</p>
+            </div>
           </div>
         </div>
 
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-          <button type="button" class="btn btn-primary" onclick="BtnModalPut()">保存</button>
+          <button type="button" class="btn btn-primary" onclick="BtnModalPutFile()">保存</button>
         </div>
       </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->

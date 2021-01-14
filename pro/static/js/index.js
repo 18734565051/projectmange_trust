@@ -189,11 +189,11 @@ $(function () {
 
     done: function (e, data) {
 
-        $('#modalFileCreate').modal("hide");
+      $('#modalFileCreate').modal("hide");
 
-        $("#fileUploadTo").prepend(
-          "<tr><td><a href='" + data.result.url + "'>" + data.result.name + "</a></td></tr>"
-        )
+      $("#fileUploadTo").prepend(
+        "<tr><td><a href='" + data.result.url + "'>" + data.result.name + "</a></td></tr>"
+      )
     }
   });
 });
@@ -219,33 +219,37 @@ $(function () {
 });
 
 
-//  创建文档
-function modalCreateFile() {
+//  编辑文档
 
-  const modalCreateFileName = $('#modalCreateFileName').val();
-  console.log(modalCreateFileName)
-  const modalCreateFileProjectStyle = $('#modalCreateFileProjectStyle').val();
-  if (modalCreateFileName == "" || modalCreateFileProjectStyle == null) {
-    $('#modalFileErrorMsg').html('文档名称不能为空')
-  } else if (modalCreateFileProjectStyle == "" || modalCreateFileProjectStyle == null) {
-    $('#modalFileErrorMsg').html('项目阶段不能为空')
+function alertFileModalPut() {
+  let checked_count = $("input[type='checkbox']:checked").length;
+  if (checked_count != 1) {
+    alert("当前选中" + checked_count + "个，只能选中一个")
   } else {
-    $.ajax({
-      url: "/ProjectDetail/",
-      dataType: "json",
-      type: "POST",
-      data: {
-        "modalCreateFileName": modalCreateFileName,
-        "modalCreateFileProjectStyle": modalCreateFileProjectStyle
-      },
-      success: function (data) {
-        if (data.code != 100) {
-          $('#modalFileErrorMsg').html(data.msg)
-        } else {
-          console.log(data)
-        }
-      }
-    })
+    // 手动显示模态框
+    $('#modalPutFileId').html($("input[type='checkbox']:checked").val());
+    $('#modalFilePut').modal('toggle');
   }
+}
+
+// 修改文档信息
+function BtnModalPutFile() {
+  $.ajax({
+    url: '/ProjectDetail/',
+    type: 'put',
+    dataType: 'json',
+    data: {
+      'file_id': $('#modalPutFileId').html(),
+      'fileLeader': $('#modalPutFileLeader').val(),
+      "project_status": $('#modalPutFileProjectStatus').val(),
+    },
+    success: function (data) {
+      if (data.code == 100) {
+        $('#modalFilePut').modal("hide");
+      } else {
+        $('#response_File_update_info').html(data.msg)
+      }
+    }
+  })
 
 }

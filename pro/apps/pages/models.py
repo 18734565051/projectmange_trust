@@ -46,8 +46,9 @@ class FileBaseInfo(model.BaseModel):
     leader = models.CharField(max_length=50, verbose_name='审批人', null=True, blank=True, help_text='审批人')
     file_router = models.FileField(verbose_name='文件存储路径', help_text="文件存储路径",
                                    upload_to="upload/%Y/%m/%d/")
-    file_project = models.ForeignKey(ProjectBaseInfo, null=True, on_delete=models.CASCADE, verbose_name='文档隶属项目阶段',
-                                     help_text='项目阶段')
+    file_project = models.ForeignKey(ProjectBaseInfo, null=True, on_delete=models.CASCADE, verbose_name='隶属项目',
+                                     help_text='隶属项目')
+    project_status = models.CharField(max_length=50, null=True, verbose_name='文档隶属项目状态', help_text='文档隶属项目状态')
     is_delete = models.BooleanField(default=0, verbose_name='是否删除', help_text='是否删除')
 
     class Meta:
@@ -58,9 +59,10 @@ class FileBaseInfo(model.BaseModel):
 
 # 日志表
 class Log(models.Model):
-    id = models.IntegerField(primary_key=True, verbose_name="id", help_text="id")
     username = models.CharField(max_length=20, verbose_name='用户名', help_text="用户名")
+    time = models.DateTimeField(auto_now_add=True, verbose_name='创建时间', help_text='创建时间')
     content = models.TextField(verbose_name="内容", help_text="内容")
+    project = models.ForeignKey(ProjectBaseInfo, on_delete=models.CASCADE, null=True)
 
     class Meta:
         db_table = 'tb_log'

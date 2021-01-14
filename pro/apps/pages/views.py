@@ -4,7 +4,7 @@ from pro.utils.jwts import JWT_Verify
 from .models import *
 from pro.utils.return_code import *
 from user.models import User
-import json, os
+import json
 from django.core.serializers import serialize
 from django.http import QueryDict, StreamingHttpResponse, JsonResponse
 from django.conf import settings
@@ -140,6 +140,11 @@ class ProjectView(View):
                     ProObject.status = ProjectCategory.objects.get(name='项目获得')
                     ProObject.leader = user
                     ProObject.save()
+                    log = Log()
+                    log.username = user.username
+                    log.content = f'点击【创建】按钮,创建项目名称：【{project_name}】'
+                    log.project = ProObject
+                    log.save()
                 else:
                     return JsonResponse(code_porject_name_exists())
 
@@ -220,34 +225,53 @@ class ProjectDetailView(View):
             response_data['style'] = project_info.style
             response_data['create_time'] = project_info.create_time
             response_data['update_time'] = project_info.update_time
-            result_queryset = FileBaseInfo.objects.filter(is_delete=0).order_by('-update_time')[:5]
+            result_queryset = FileBaseInfo.objects.filter(is_delete=0, file_project__id=id).order_by('-update_time')[:5]
             #  queryset序列化输出
             result_json = serialize('json', result_queryset)
             result_dicts = json.loads(result_json)
             for index, result_dict in enumerate(result_dicts):
                 result_dict['fields']['founder'] = result_queryset[index].founder.username
-                result_dict['fields']['file_project'] = result_queryset[index].file_project.status.name
+                result_dict['fields']['file_project'] = result_queryset[index].project_status
             response_data['result_dicts'] = result_dicts
             response_data['user_id'] = user_login_id
-            print(response_data)
+            log = Log.objects.filter(project__id=id).order_by('-time')
+            response_data['logs'] = log
+
             return render(request, 'project_details.html', context=response_data)
 
     def post(self, request):
         #  上传项目文档
-        # data = {'id': file.id, "name": file.name, 'trial_status': file.trial_status,'founder':file.founder,'file_router':file.file.url,'file_project':file.file_project.name, }
         file = request.FILES.get('file')
         #  获取项目id与用户id
         style_username = request.POST.get('file_project').split('.')
         if not file:
             return JsonResponse(code_error('no files for upload'))
         else:
+            probaseinfo = ProjectBaseInfo.objects.get(id=style_username[0], is_delete=0)
             file_object = FileBaseInfo(name=file, trial_status='未审核', founder=User.objects.get(id=style_username[1]),
-                                       file_router=file,
-                                       file_project=ProjectBaseInfo.objects.get(id=style_username[0]), is_delete=0)
+                                       file_router=file, project_status=probaseinfo.status.name,
+                                       file_project=probaseinfo)
             file_object.save()
             # 拼接返回的参数
             data = code_success()
             data['url'] = file_object.file_router.url
             data['name'] = file_object.name.name
-            print(data)
             return JsonResponse(data)
+
+    def put(self, request):
+        # 获取参数
+        request_data = QueryDict(request.body)
+        id = request_data.get('file_id')
+        fileLeader = request_data.get('fileLeader')
+        status = request_data.get('project_status')  # 项目阶段
+        user = User.objects.filter(username=fileLeader)
+        if user.count() == 0:
+            return JsonResponse(code_user_No_exists())
+        file_update = FileBaseInfo.objects.get(id=id)
+        file_update.founder = user[0]
+        file_update.project_status = status
+        file_update.save()
+        if not file_update:
+            return JsonResponse(code_files_update_fail())
+        # 返回信息
+        return JsonResponse(code_success())
