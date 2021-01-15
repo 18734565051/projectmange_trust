@@ -72,3 +72,7 @@ def code_files_upload_fail():
 
 def code_files_update_fail():
     return {"code": 402, "msg": "文件更新失败"}
+
+
+def code_files_delete_fail():
+    return {'code': 403, "msg": "文件删除失败"}

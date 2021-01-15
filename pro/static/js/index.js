@@ -89,7 +89,7 @@ function BtnModalPut() {
   })
 }
 
-// 删除
+// 删除项目
 function deleteCheckProject() {
   const detele_checked_count = $("input[type='checkbox']:checked").length;
   if (detele_checked_count == 0) {
@@ -252,4 +252,36 @@ function BtnModalPutFile() {
     }
   })
 
+}
+
+// 删除文档
+function deleteFileCheckProject() {
+  const detele_checked_count = $("input[type='checkbox']:checked").length;
+  if (detele_checked_count == 0) {
+    alert('请至少选中一个， 当前选中：' + detele_checked_count + '个')
+  } else {
+    const project_ids = new Array();
+    $('input[type="checkbox"]:checked').each(function () {
+      project_ids.push($(this).val());
+    });
+    $.ajax({
+      url: "/ProjectDetail/",
+      data: {
+        "project_ids": project_ids
+      },
+      type: 'delete',
+      dataType: "json",
+      success: function (data) {
+        if (data.code == 100) {
+          //  删除列表tr
+          $("input[type='checkbox']:checked").parent().parent().parent().remove()
+        } else {
+          alert(data.msg)
+        }
+      },
+      error: function (data) {
+        alert(data.msg)
+      }
+    });
+  }
 }

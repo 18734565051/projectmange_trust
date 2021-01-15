@@ -275,3 +275,14 @@ class ProjectDetailView(View):
             return JsonResponse(code_files_update_fail())
         # 返回信息
         return JsonResponse(code_success())
+
+    def delete(self, request):
+        project_ids = QueryDict(request.body)
+        try:
+            # 逻辑删除  更新is_delete = 1
+            for project_id in project_ids.getlist('project_ids[]'):
+                if not FileBaseInfo.objects.filter(id=project_id).update(is_delete=1):
+                    return JsonResponse(code_files_delete_fail())
+        except Exception as e:
+            return JsonResponse(code_error(str(e)))
+        return JsonResponse(code_success())
