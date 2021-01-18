@@ -3,7 +3,7 @@ from django.contrib.auth.models import AbstractUser
 
 
 class User(AbstractUser):
-    mobile = models.CharField(max_length=11, unique=True, verbose_name="手机号")
+    mobile = models.CharField(max_length=11, unique=True, null=True, verbose_name="手机号")
     image = models.ImageField(upload_to='user', verbose_name='头像', null=True)
 
     #  admin 返回时间

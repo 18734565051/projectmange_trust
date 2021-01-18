@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     #  添加环境变量之后 默认在users下找包
     'user.apps.UserConfig',
     'pages.apps.PagesConfig',
+    'approval.apps.ApprovalConfig',
     # 富文本编辑器
     'ckeditor',
     'ckeditor_uploader',  # 富文本编辑器上传图片模块

@@ -285,3 +285,73 @@ function deleteFileCheckProject() {
     });
   }
 }
+
+// 审批
+function alertapprovalModal() {
+  let checked_count = $("input[type='checkbox']:checked").length;
+  if (checked_count == 0) {
+    alert("当前选中" + checked_count + "个，至少选择一个")
+  } else {
+    // 获取选中值
+    const project_ids = new Array();
+    $('input[type="checkbox"]:checked').each(function () {
+      project_ids.push($(this).val());
+    });
+    $.ajax({
+      url: "/Approval/File/",
+      dataType: "json",
+      type: 'get',
+      success: function (data) {
+        if (data.code == 100) {
+          var selectStr = '<select class="form-control">';
+          $.each(data.data, function (index, item) {
+            $.each(item, function (k, v) {
+              selectStr += "<option value=" + k + ">" + v + "</option>"
+            })
+          });
+          selectStr += "</select>";
+          $('#modalSelectMange').html(selectStr);
+          // 手动显示模态框
+          $('#modalFileapprovalPut').modal('toggle');
+        } else {
+          $('#modalSelectMange').html(data.msg);
+        }
+      },
+      error: function (data) {
+        $('#modalSelectMange').html(data);
+      }
+    });
+
+  }
+}
+
+function BtnModalApprovalFile() {
+  const detele_checked_count = $("input[type='checkbox']:checked").length;
+  if (detele_checked_count == 0) {
+    alert('请至少选中一个， 当前选中：' + detele_checked_count + '个')
+  } else {
+    const project_ids = new Array();
+    $('input[type="checkbox"]:checked').each(function () {
+      project_ids.push($(this).val());
+    });
+    $.ajax({
+      url: "/ProjectDetail/",
+      data: {
+        "project_ids": project_ids
+      },
+      type: 'delete',
+      dataType: "json",
+      success: function (data) {
+        if (data.code == 100) {
+          //  删除列表tr
+          $("input[type='checkbox']:checked").parent().parent().parent().remove()
+        } else {
+          alert(data.msg)
+        }
+      },
+      error: function (data) {
+        alert(data.msg)
+      }
+    });
+  }
+}

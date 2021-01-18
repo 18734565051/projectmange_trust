@@ -2,6 +2,7 @@ from django.db import models
 from user.models import User
 import uuid
 from pro.utils import model
+from approval.models import FlowModel
 
 
 #  项目阶段表
@@ -50,6 +51,8 @@ class FileBaseInfo(model.BaseModel):
                                      help_text='隶属项目')
     project_status = models.CharField(max_length=50, null=True, verbose_name='文档隶属项目状态', help_text='文档隶属项目状态')
     is_delete = models.BooleanField(default=0, verbose_name='是否删除', help_text='是否删除')
+    flow_name = models.ForeignKey(FlowModel, on_delete=models.CASCADE, null=True, blank=True, verbose_name='流程对象',
+                                  help_text='流程对象')
 
     class Meta:
         db_table = "tb_filebaseInfo"
