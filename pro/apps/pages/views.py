@@ -286,3 +286,4 @@ class ProjectDetailView(View):
         except Exception as e:
             return JsonResponse(code_error(str(e)))
         return JsonResponse(code_success())
+
