@@ -79,7 +79,7 @@ class IndexView(View):
             #  输出文档信息
             # 判断如果是管理员 返回
             if user.is_superuser or user.is_staff:
-                return render(request, "index_a.html", context=payload)
+                return render(request, "index.html", context=payload)
             else:
                 return render(request, "index.html", context=payload)
 

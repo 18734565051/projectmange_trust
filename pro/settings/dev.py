@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -81,6 +82,16 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'pro.wsgi.application'
+# channels_redis  通道连接
+ASGI_APPLICATION = 'pro.asgi.application'
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
@@ -224,4 +235,3 @@ CKEDITOR_UPLOAD_PATH = ''  # 上传图片保存路径，使用了FastDFS，所�
 # FDFS_CLIENT = os.path.join(BASE_DIR, 'utils/Fastdfs/client.conf')
 # 自定义存储类型
 # DEFAULT_FILE_STORAGE = 'pro.util.Fastdfs.stroage.FdfsStorage'
-

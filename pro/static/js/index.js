@@ -292,18 +292,13 @@ function alertapprovalModal() {
   if (checked_count == 0) {
     alert("当前选中" + checked_count + "个，至少选择一个")
   } else {
-    // 获取选中值
-    const project_ids = new Array();
-    $('input[type="checkbox"]:checked').each(function () {
-      project_ids.push($(this).val());
-    });
     $.ajax({
       url: "/Approval/File/",
       dataType: "json",
       type: 'get',
       success: function (data) {
         if (data.code == 100) {
-          var selectStr = '<select class="form-control">';
+          var selectStr = '<select class="form-control" id="modalApprovalFile">';
           $.each(data.data, function (index, item) {
             $.each(item, function (k, v) {
               selectStr += "<option value=" + k + ">" + v + "</option>"
@@ -330,16 +325,18 @@ function BtnModalApprovalFile() {
   if (detele_checked_count == 0) {
     alert('请至少选中一个， 当前选中：' + detele_checked_count + '个')
   } else {
-    const project_ids = new Array();
+    const file_ids = new Array();
     $('input[type="checkbox"]:checked').each(function () {
-      project_ids.push($(this).val());
+      file_ids.push($(this).val());
     });
+    user_id = $('#modalApprovalFile').val();
     $.ajax({
-      url: "/ProjectDetail/",
+      url: "/Approval/File/",
       data: {
-        "project_ids": project_ids
+        "file_ids": file_ids,
+        "user_id":user_id
       },
-      type: 'delete',
+      type: 'post',
       dataType: "json",
       success: function (data) {
         if (data.code == 100) {
